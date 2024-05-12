@@ -8,12 +8,13 @@ app = Flask(__name__)
 CORS(app)
 
 # Load your dataset globally so it's only done once
-df = pd.read_csv(r'D:\file\finalData (1).csv')
+df = pd.read_csv(r'E:\Extras\MLPython\ScrappyCourse\venv\priceoy\priceoy\finalData.csv')
 df['Price'] = df['Price'].str.replace(',', '')
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce').fillna(0)
 df['Battery'] = df['Battery'].str.replace('mAh','')
 df['Battery'] = pd.to_numeric(df['Battery'], errors='coerce').fillna(0)
-
+df['Rating Score'] = df['Rating Score'].str.replace(' Ratings','')
+df['Rating Score'] = pd.to_numeric(df['Rating Score'], errors='coerce').fillna(0)
 
 @app.route('/search_phones', methods=['POST'])
 def search_phones_api():
@@ -47,15 +48,7 @@ def search_phones(df, name=None, storage=None, battery=None, max_price=None, min
     if storage:
         storageString = str(storage)
         results = results[results['Storage'].str.contains(storageString, na=False)]
-    if rating_score:
-        
-        results = results.sort_values(by='Rating Score', ascending=False)
-        print('rating score called')
-        # print(dff)
-        
-        # results = results.where(pd.notnull(results), None)
-
-        # results = results.head(30)
+    
              
         
     if name:
@@ -64,6 +57,17 @@ def search_phones(df, name=None, storage=None, battery=None, max_price=None, min
         results = results[results['name_match_score'] > 70]  # Adjust the threshold as needed
     # Add more filters for other criteria if needed
     # ...
+    if rating_score:
+        
+        results = results.sort_values(by='Rating Score', ascending=False)
+        print('rating score called')
+        # print(dff)
+        
+        results = results.where(pd.notnull(results), None)
+
+        results = results.head(10)
+    
+    
     if results.empty:
         return pd.DataFrame(columns=df.columns)
         
@@ -71,6 +75,7 @@ def search_phones(df, name=None, storage=None, battery=None, max_price=None, min
     
      # Check if 'name_match_score' column exists before sorting
     if 'name_match_score' in results.columns:
+        
         recommended = results.sort_values(by='name_match_score', ascending=False)
     else:
         # If 'name_match_score' does not exist, return the results as is or sort by another relevant column
@@ -87,3 +92,4 @@ def search_phones(df, name=None, storage=None, battery=None, max_price=None, min
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
