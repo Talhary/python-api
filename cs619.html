@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phone Recommendation System</title>
+  </head>
+  <body>
+    <h1>Phone Recommendation System</h1>
+    <!-- Add your UI elements here -->
+
+    <script>
+      // Your JavaScript function goes here
+      function searchPhones(criteria) {
+        fetch("http://localhost:5000/search_phones", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(criteria),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Handle the response data (the list of recommended phones)
+            console.log(data);
+            // Update your UI here
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      // Example usage:
+      searchPhones({
+        name: "Tecno",
+        storage: 32,
+        battery: 2000,
+        max_price: 50000,
+        min_price: null,
+        rating_score: "top",
+      });
+    </script>
+  </body>
+</html>

@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Load your dataset globally so it's only done once
-df = pd.read_csv(r'\workspaces\python-api\finalData.csv')
+df = pd.read_csv(r'D:\file\finalData (1).csv')
 df['Price'] = df['Price'].str.replace(',', '')
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce').fillna(0)
 df['Battery'] = df['Battery'].str.replace('mAh','')
