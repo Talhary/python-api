@@ -8,7 +8,16 @@ app = Flask(__name__)
 CORS(app)
 
 # Load your dataset globally so it's only done once
-df = pd.read_csv(r'E:\Extras\MLPython\ScrappyCourse\venv\priceoy\priceoy\finalData.csv')
+import os
+
+# Get the current directory
+current_directory = os.getcwd()
+
+# Construct the path to the file next to the main file
+file_path = os.path.join(current_directory, 'finalData.csv')
+print("Path of the file:", file_path)
+
+df = pd.read_csv(file_path)
 df['Price'] = df['Price'].str.replace(',', '')
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce').fillna(0)
 df['Battery'] = df['Battery'].str.replace('mAh','')
